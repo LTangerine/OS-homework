@@ -1,4 +1,4 @@
-﻿# 操作系统Points——project1
+﻿# 操作系统Points——project
 
 ## 实验目标
 
@@ -32,6 +32,7 @@ timer_sleep (int64_t ticks)
     thread_yield();
 }
 ```
+
 **部分涉及函数：**
 
 1.timer_ticks()获取ticks的当前返回值
@@ -53,9 +54,11 @@ timer_sleep (int64_t ticks)
 (1). 在线程的结构体加上ticks_blocked成员用于记录被sleep的时间![在这里插入图片描述](https://img-blog.csdnimg.cn/20190603224525749.png)
 
 (2). 在线程被创建（thread_create函数）的时候初始化ticks_blocked为0（t->ticks_blocked = 0;）
+
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20190603224546618.png)
 
 (3). 修改时钟中断处理函数（timer_interrupt函数），加入线程sleep时间的检测， thread_foreach (blocked_thread_check, NULL);（thread_foreach就是对每个线程都执行blocked_thread_check这个函数）
+
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20190603224600520.png)
 
 (4). 编写blocked_thread_check函数（编写在thread.c中）
@@ -80,8 +83,8 @@ blocked_thread_check (struct thread *t, void *aux UNUSED)
 (5). threa.h中添加void blocked_thread_check (struct thread *t, void *aux UNUSED);
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20190603224622673.png)
 
-
 **修改后：**
+
 ```
 void
 timer_sleep (int64_t ticks)
@@ -103,14 +106,11 @@ timer_sleep (int64_t ticks)
 
 1.thread_foreach(thread_action_func *func, void *aux)遍历当前就绪队列中的所有线程，并且对于每一个线程执行一次func操作（func是一个任意给定函数的指针，参数aux是想要传给这个函数的参数），所有就绪的线程都被保存在一个链表中，此函数是要遍历一遍链表（函数只能在中断关闭的时候调用）
 
-
 2.thread_block()和thread_unblock第一个函数的作用是把当前占用cpu的线程阻塞掉，第二个函数作用是将已经被阻塞掉的线程唤醒到就绪队列中
-
 
 3.timer_interrupt (struct intr_frame *args UNUSED) 函数，pintos在每次时间中断时（即每一个时间单位（ticks））调用一次这个函数
 
 ## 遇到的问题：
-
 
 报错：
 
@@ -125,6 +125,7 @@ timer_sleep (int64_t ticks)
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20190603224741415.png)
 
 运行成功
+
 运行结果：
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20190603224755586.png)
